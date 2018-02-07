@@ -1,8 +1,8 @@
 let cached = {}
 const options = {
-  defaultReducerFunctionName : 'other', //name of the reducer function which used  with standart reduce using  switch/case
-  useCache : true,
-  strictMode: false,//TO DO call only called reducer functions and skip other. When false need set initial state store
+  defaultReducerFunctionName: 'other', //name of the reducer function which used  with standart reduce using  switch/case
+  useCache: true,
+  strictMode: true,//TO DO call only called reducer functions and skip other. When false need set initial state store
   defaultCommonReducer: (state = {}, action) => state
 }
 /**
@@ -16,7 +16,7 @@ const options = {
  *
  **/
 export function combineReducers(reducers, opts) {
-  const {defaultReducerFunctionName, useCache, defaultCommonReducer} = {...options, ...opts}
+  const {defaultReducerFunctionName, useCache, defaultCommonReducer, strictMode} = {...options, ...opts}
   return (state = {}, action) => {
     const {type, ...payload} = action
     let targetReducers = []
@@ -33,7 +33,7 @@ export function combineReducers(reducers, opts) {
 
     let hasChanged = false
     const nextState = {}
-    if (useCache  && cached[type]) {
+    if (useCache && cached[type]) {
       const reducerKeys = Object.keys(cached[type])
       reducerKeys.forEach(key => {
         const actualReducer = cached[type][key]
@@ -54,18 +54,21 @@ export function combineReducers(reducers, opts) {
         const reducer = reducers[key]
         const previousStateForKey = state[key]
         const isReducerFunction = ~targetReducers.indexOf(key) && reducers[key] && reducers[key][method]
-        const actualReducer = reducers[key][isReducerFunction ? method : defaultReducerFunctionName] ||  defaultCommonReducer
-        useCache && (cached[type][key] = actualReducer)
-        const nextStateForKey = actualReducer(previousStateForKey, action)
-        if (typeof nextStateForKey === 'undefined') {
-          useCache && (delete cached[type])
-          const errorMessage = getUndefinedStateErrorMessage(reducer, action)
-          throw new Error(errorMessage)
+        if (!strictMode || !method || (isReducerFunction && strictMode)) {
+          const actualReducer = reducers[key][isReducerFunction ? method : defaultReducerFunctionName] || defaultCommonReducer
+          useCache && (cached[type][key] = actualReducer)
+          const nextStateForKey = actualReducer(previousStateForKey, action)
+          if (typeof nextStateForKey === 'undefined') {
+            useCache && (delete cached[type])
+            const errorMessage = getUndefinedStateErrorMessage(reducer, action)
+            throw new Error(errorMessage)
+          }
+          nextState[key] = nextStateForKey
+          hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+        } else {
+          nextState[key] = previousStateForKey;
         }
-        nextState[key] = nextStateForKey
-        hasChanged = hasChanged || nextStateForKey !== previousStateForKey
       })
-
     }
     return hasChanged ? nextState : state
   }
@@ -82,5 +85,3 @@ function getUndefinedStateErrorMessage(key, action) {
      `If you want this reducer to hold no value, you can return null instead of undefined.`
   )
 }
-
-

@@ -1,4 +1,4 @@
-import  { combineReducers } from '../redux-reducer-functions'
+import  { combineReducers } from 'redux-reducer-functions'
 import {selectReddit} from './reducerFuncs'
 import *  as  postsByReddit from './reducerFuncs'
 

@@ -19,10 +19,6 @@ export function toggleTodo(state, action){
     )
   }
 
-export function testAsync(state, action){
-  return state;
-}
-
 export function other(state = defState, action){
   // place for standart redux switch/case
   return state;

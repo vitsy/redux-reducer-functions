@@ -1,4 +1,4 @@
-import  { combineReducers } from '../redux-reducer-functions'
+import  { combineReducers } from 'redux-reducer-functions'
 import * as cart from './cart'
 import * as products from './products'
 
