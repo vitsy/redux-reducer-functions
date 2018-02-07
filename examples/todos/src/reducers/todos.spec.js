@@ -1,16 +1,16 @@
-import todos from './todos'
+import * as todos from './todos'
 
 describe('todos reducer', () => {
   it('should handle initial state', () => {
     expect(
-      todos(undefined, {})
+      todos.other(undefined, {})
     ).toEqual([])
   })
 
-  it('should handle ADD_TODO', () => {
+  it('should handle todos.addTodo', () => {
     expect(
-      todos([], {
-        type: 'ADD_TODO',
+      todos.addTodo([], {
+        type: 'todos.addTodo',
         text: 'Run the tests',
         id: 0
       })
@@ -23,14 +23,14 @@ describe('todos reducer', () => {
     ])
 
     expect(
-      todos([
+      todos.addTodo([
         {
           text: 'Run the tests',
           completed: false,
           id: 0
         }
       ], {
-        type: 'ADD_TODO',
+        type: 'todos.addTodo',
         text: 'Use Redux',
         id: 1
       })
@@ -47,7 +47,7 @@ describe('todos reducer', () => {
     ])
 
     expect(
-      todos([
+      todos.addTodo([
         {
           text: 'Run the tests',
           completed: false,
@@ -58,7 +58,7 @@ describe('todos reducer', () => {
           id: 1
         }
       ], {
-        type: 'ADD_TODO',
+        type: 'todos.addTodo',
         text: 'Fix the tests',
         id: 2
       })
@@ -79,9 +79,9 @@ describe('todos reducer', () => {
     ])
   })
 
-  it('should handle TOGGLE_TODO', () => {
+  it('should handle todos.toggleTodo', () => {
     expect(
-      todos([
+       todos.toggleTodo([
         {
           text: 'Run the tests',
           completed: false,
@@ -92,7 +92,7 @@ describe('todos reducer', () => {
           id: 0
         }
       ], {
-        type: 'TOGGLE_TODO',
+        type: 'todos.toggleTodo',
         id: 1
       })
     ).toEqual([
