@@ -1,7 +1,7 @@
 import {createStore} from 'redux'
 import  {combineReducers} from './index'
 
-const defState= {}
+const defState = {}
 
 const reducer1 = {
   copyAction: (state = defState, action) => {
@@ -21,11 +21,11 @@ const reducer2 = {
     return {...state, ...action}
   },
   other: (state = defState, action) => {
-    return {}
+    return state
   }
 }
 
-describe('test with options(defaultReducerFunctionName:other,useCache:true,strictMode:false,}', () => {
+describe('test with options(defaultReducerFunctionName:other, useCache:true, strictMode:false,}', () => {
     const reducer = combineReducers({
       reducer1,
       reducer2
@@ -70,16 +70,19 @@ describe('test with options(defaultReducerFunctionName:other,useCache:true,stric
     expect(store.getState().reducer2.par).toEqual('both3')
   })
 
-  it('should called reducer1.both only and set par ="only1"' , () => {
+  it('should called reducer1.both only and set par = "only1" and preserve state for reducer2' , () => {
+    action = {type: '[reducer1, reducer2].both', par: 'both3'}
+    store.dispatch(action)
     let action = {type: 'reducer1.both', par: 'only1'}
     store.dispatch(action)
     expect(store.getState().reducer1.par).toEqual('only1')
-    expect(store.getState().reducer2.par).not.toEqual('only1')
+    expect(store.getState().reducer2.par).toBeDefined()
+    expect(store.getState().reducer2.par).toEqual('both3')
   })
 
 })
 
-describe('test with options(defaultReducerFunctionName:other,useCache:true,strictMode:true,}', () => {
+describe('test with options(defaultReducerFunctionName:other, useCache:true, strictMode:true,}', () => {
   const reducer = combineReducers({
     reducer1,
     reducer2
@@ -108,7 +111,7 @@ describe('test with options(defaultReducerFunctionName:other,useCache:true,stric
     let action = {type: 'reducer1.both', par: 'only1'}
     store.dispatch(action)
     expect(store.getState().reducer1.par).toEqual('only1')
-    expect(store.getState().reducer2.par).not.toEqual('only1')
+    expect(store.getState().reducer2.par).toBeDefined()
+    expect(store.getState().reducer2.par).toEqual('both')
   })
-
 })

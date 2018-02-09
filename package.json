@@ -1,0 +1,53 @@
+{
+  "name": "redux-reducer-functions",
+  "version": "0.0.1",
+  "description": "Use function names as action types",
+  "homepage": "https://github.com/vitsy/redux-reducer-functions",
+  "author": "Victor Tsyba <victor.tsyba@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vitsy/redux-reducer-functions.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "action",
+    "reducer",
+    "constants"
+  ],
+  "main": "./lib",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "scripts": {
+    "dev": "babel ./index.js  --watch --out-dir ./lib --source-maps",
+    "build": "npm run clean && babel ./index.js --out-dir ./lib",
+    "prepublish": "npm run build",
+    "test": "jest --runInBand --verbose",
+    "clean": "rimraf ./lib"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "redux": "^3.2.1",
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^22.2.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "jest": "^22.2.1",
+    "react-test-renderer": "^16.2.0",
+    "rimraf": "^2.6.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react",
+      "stage-0"
+    ]
+  }
+}

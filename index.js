@@ -32,7 +32,7 @@ export function combineReducers(reducers, opts) {
     }
 
     let hasChanged = false
-    const nextState = {}
+    let nextState = {}
     if (useCache && cached[type]) {
       const reducerKeys = Object.keys(cached[type])
       reducerKeys.forEach(key => {
@@ -47,6 +47,9 @@ export function combineReducers(reducers, opts) {
         nextState[key] = nextStateForKey
         hasChanged = hasChanged || nextStateForKey !== previousStateForKey
       })
+      if (hasChanged) {
+        nextState = {...state, ...nextState}
+      }
     } else {
       useCache && (cached[type] = {})
       const reducerKeys = Object.keys(reducers)
@@ -54,10 +57,9 @@ export function combineReducers(reducers, opts) {
         const reducer = reducers[key]
         const previousStateForKey = state[key]
         const isReducerFunction = ~targetReducers.indexOf(key) && reducers[key] && reducers[key][method]
-        if (!strictMode || !method || (isReducerFunction && strictMode)) {
-          const actualReducer = reducers[key][isReducerFunction ? method : defaultReducerFunctionName] || defaultCommonReducer
-          useCache && (cached[type][key] = actualReducer)
-          const nextStateForKey = actualReducer(previousStateForKey, action)
+          const actualReducerFunc = reducers[key][isReducerFunction ? method : defaultReducerFunctionName] || defaultCommonReducer
+          useCache &&  (strictMode && isReducerFunction || !strictMode) && (cached[type][key] = actualReducerFunc)
+          const nextStateForKey = actualReducerFunc(previousStateForKey, action)
           if (typeof nextStateForKey === 'undefined') {
             useCache && (delete cached[type])
             const errorMessage = getUndefinedStateErrorMessage(reducer, action)
@@ -65,9 +67,6 @@ export function combineReducers(reducers, opts) {
           }
           nextState[key] = nextStateForKey
           hasChanged = hasChanged || nextStateForKey !== previousStateForKey
-        } else {
-          nextState[key] = previousStateForKey;
-        }
       })
     }
     return hasChanged ? nextState : state
