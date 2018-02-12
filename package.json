@@ -28,11 +28,9 @@
     "test": "jest --runInBand --verbose",
     "clean": "rimraf ./lib"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7",
-    "redux": "^3.2.1",
     "babel-cli": "^6.26.0",
     "babel-jest": "^22.2.0",
     "babel-preset-env": "^1.6.1",
@@ -40,7 +38,10 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "jest": "^22.2.1",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
     "react-test-renderer": "^16.2.0",
+    "redux": "^3.2.1",
     "rimraf": "^2.6.2"
   },
   "babel": {
